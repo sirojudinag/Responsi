@@ -1,21 +1,30 @@
 package sirojudinag.gmail.com.responsi;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    MySQLHelper dbHelper;
+    private EditText ed_num;
+    private EditText ed_name;
+    protected Cursor cursor;
+    private int id = -1;
+    protected ListAdapter adapter;
+    protected ListView numberList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,15 +32,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -41,6 +41,39 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        this.numberList = (ListView) this.findViewById(R.id.ListView01);
+        dbHelper = new MySQLHelper(this);
+     /*   numberList.setSelected(false);
+        numberList.setOnItemClickListener(new OnItemClickListener() {
+            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+                                    long arg3) {
+                SQLiteDatabase db = dbHelper.getReadableDatabase();
+                cursor = db.rawQuery("SELECT * FROM data", null);
+                cursor.moveToPosition(arg2);
+                ed_num.setText(cursor.getString(1));
+                ed_name.setText(cursor.getString(2));
+                id = cursor.getInt(0);
+            }
+        });*/
+        view();
+
+    }
+
+    private void view() {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        try {
+            cursor = db.rawQuery("SELECT * FROM data", null);
+            adapter = new SimpleCursorAdapter(
+                    this,
+                    R.layout.view2,
+                    cursor,
+                    new String[]{"number", "name"},
+                    new int[]{R.id.number, R.id.name});
+            numberList.setAdapter(adapter);
+        } catch (Exception e) {
+            ed_num.setText(e.toString());
+        }
     }
 
     @Override
@@ -53,12 +86,15 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /*
+    menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
+    */
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -81,21 +117,24 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            Intent FormLayout = new Intent(MainActivity.this,FormLayout.class);
-            startActivity(FormLayout);
-        } else if (id == R.id.nav_gallery) {
-            Intent gpsmagnetic = new Intent(MainActivity.this,gpsmagnetic.class);
-            startActivity(gpsmagnetic);
-        } else if (id == R.id.nav_slideshow) {
+        if (id == R.id.nav_add) {
+            Intent tambah = new Intent(MainActivity.this,addkontak.class);
+            startActivity(tambah);
+        } else if (id == R.id.nav_kontak) {
+            Intent Kontak = new Intent(MainActivity.this,kontak.class);
+            startActivity(Kontak);
+        } else if (id == R.id.nav_camera) {
             Intent Camera = new Intent(MainActivity.this,camera.class);
             startActivity(Camera);
-        } else if (id == R.id.nav_manage) {
-
+        } else if (id == R.id.gps) {
+            Intent Gps = new Intent(MainActivity.this,gps.class);
+            startActivity(Gps);
         } else if (id == R.id.nav_share) {
-
+            Intent Musikk = new Intent(MainActivity.this,musik.class);
+            startActivity(Musikk);
         } else if (id == R.id.nav_send) {
-
+            Intent Share = new Intent(MainActivity.this,share.class);
+            startActivity(Share);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
