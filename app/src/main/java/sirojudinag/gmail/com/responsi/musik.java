@@ -1,12 +1,11 @@
 package sirojudinag.gmail.com.responsi;
+//sirojudin abdul ghopur
 import android.annotation.SuppressLint;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-
-
 import java.io.IOException;
 
 public class musik extends AppCompatActivity implements View.OnClickListener {
